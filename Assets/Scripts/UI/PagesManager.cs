@@ -44,6 +44,7 @@ public class PagesManager : MonoBehaviour
         }
         menuPages[currentPage].GetComponent<Animator>().SetBool("Right", true);
         menuPages[currentPage].GetComponent<Animator>().SetBool("PageIn", false);
+        menuPages[currentPage].OnPageUnfocus();
         for (int i = currentPage + 1; i < menuPages.Length; i++)
         {
             if (!menuPages[i].CanPageBeSkipped())
@@ -62,6 +63,7 @@ public class PagesManager : MonoBehaviour
     {
         menuPages[currentPage].GetComponent<Animator>().SetBool("Right", false);
         menuPages[currentPage].GetComponent<Animator>().SetBool("PageIn", false);
+        menuPages[currentPage].OnPageUnfocus();
         for (int i = currentPage - 1; i >= 0; i--)
         {
             if (!menuPages[i].CanPageBeSkipped())

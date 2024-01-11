@@ -31,4 +31,6 @@ public class Page : MonoBehaviour
         return false;
     }
 
+    public virtual void OnPageUnfocus() { }
+
 }

@@ -26,17 +26,28 @@ public class SelectStartAndEndTimesPage : Page
         string videoPath = SongData.videoPath;
         videoPlayer.url = $"file://{videoPath}";
         videoPlayer.Play();
-        StartCoroutine(PauseAfterShortTime());
+        StartCoroutine(FinishPageInitialization());
     }
-    private IEnumerator PauseAfterShortTime()
+    private IEnumerator FinishPageInitialization()
     {
         yield return new WaitForSeconds(0.1f);
         videoPlayer.Pause();
+
+        SongData.startTime = 0f;
+        SongData.endTime = (float)videoPlayer.length - 1f;
+        SetNextPageAvailable(true);
     }
 
     public void PlayPause()
     {
-        if (paused)
+        SetPaused(!paused);
+    }
+
+
+    public void SetPaused(bool value)
+    {
+        paused = value;
+        if (!paused)
         {
             videoPlayer.Play();
             pauseIconAnimator.SetBool("Paused", false);
@@ -46,8 +57,6 @@ public class SelectStartAndEndTimesPage : Page
             videoPlayer.Pause();
             pauseIconAnimator.SetBool("Paused", true);
         }
-
-        paused = !paused;
     }
     
     public void SetStartTime()
@@ -74,23 +83,27 @@ public class SelectStartAndEndTimesPage : Page
     {
         dragging = false;
     }
-
-    public void OnProgressSliderChanged()
-    {
-        if (!dragging) return;
-        videoPlayer.time = videoPlayer.length * videoProgressSlider.value;
-    }
+    
 
 
     private void Update()
     {
-        if (videoPlayer.isPlaying && !dragging)
-        {
-            videoProgressSlider.value = (float)(videoPlayer.time / videoPlayer.length);
-        }
-        else if (!dragging)
+        if (dragging && videoPlayer.isPlaying)
         {
             videoPlayer.time = videoPlayer.length * videoProgressSlider.value;
         }
+        else
+        {
+            float v = (float)(videoPlayer.time / videoPlayer.length);
+            if (!float.IsNaN(v))
+            {
+                videoProgressSlider.value = v;
+            }
+        }
+    }
+
+    public override void OnPageUnfocus()
+    {
+        SetPaused(true);
     }
 }
