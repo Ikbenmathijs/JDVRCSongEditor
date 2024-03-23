@@ -56,9 +56,19 @@ public class LightingEditorVideoPlayer : MonoBehaviour
         dragging = false;
     }
 
+    public float GetVideoTime()
+    {
+        return (float)videoPlayer.time;
+    }
+    
+    public float GetVideoLength()
+    {
+        return (float)videoPlayer.length;
+    }
+
     private void Update()
     {
-        if (dragging && videoPlayer.isPlaying)
+        if (dragging)
         {
             videoPlayer.time = videoPlayer.length * videoProgressSlider.value;
         } else

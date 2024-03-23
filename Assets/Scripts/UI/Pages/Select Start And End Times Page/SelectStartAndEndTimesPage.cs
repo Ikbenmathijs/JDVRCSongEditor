@@ -88,7 +88,7 @@ public class SelectStartAndEndTimesPage : Page
 
     private void Update()
     {
-        if (dragging && videoPlayer.isPlaying)
+        if (dragging)
         {
             videoPlayer.time = videoPlayer.length * videoProgressSlider.value;
         }

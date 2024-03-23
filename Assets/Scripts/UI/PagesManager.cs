@@ -19,6 +19,8 @@ public class PagesManager : MonoBehaviour
 
     [SerializeField] private Button nextPageButton;
     [SerializeField] private Button previousPageButton;
+    
+    public bool loadInitializeScene = true;
 
     private void Start()
     {
@@ -30,7 +32,7 @@ public class PagesManager : MonoBehaviour
         
         // for convenience
 #if UNITY_EDITOR
-        if (!Config.initialized)
+        if (!Config.initialized && loadInitializeScene)
             SceneManager.LoadScene("Init");
 #endif
     }
