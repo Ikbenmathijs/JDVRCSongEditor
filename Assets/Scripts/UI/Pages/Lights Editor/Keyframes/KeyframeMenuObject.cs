@@ -11,6 +11,7 @@ public class KeyframeMenuObject : MonoBehaviour
     public List<Keyframe> holdingKeyframes = new List<Keyframe>();
     public Color selectedColor;
     public Color unselectedColor;
+    public SelectKeyframePopup selectKeyframePopup;
     
     public void AddKeyframe(Keyframe keyframe)
     {
@@ -22,6 +23,19 @@ public class KeyframeMenuObject : MonoBehaviour
         }
     }
 
+    public void OnKeyframeHeadPressed()
+    {
+        if (selectKeyframePopup == null)
+        {
+            Debug.LogError("SelectKeyframePopup is null");
+            return;
+        }
+        
+        selectKeyframePopup.OpenKeyframeDetailsListPopup(holdingKeyframes);
+    }
+
+    
+    // triggered by animation event
     public void KeyframeHoverStart()
     {
         foreach (Keyframe keyframe in holdingKeyframes)
@@ -31,6 +45,7 @@ public class KeyframeMenuObject : MonoBehaviour
         }
     }
     
+    // triggered by animation event
     public void KeyframeHoverEnd()
     {
         foreach (Keyframe keyframe in holdingKeyframes)
