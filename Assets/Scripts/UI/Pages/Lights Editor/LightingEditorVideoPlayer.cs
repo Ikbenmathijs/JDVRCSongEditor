@@ -9,9 +9,12 @@ public class LightingEditorVideoPlayer : MonoBehaviour
 {
     public VideoPlayer videoPlayer;
     private bool paused = true;
-    public Animator pauseIconAnimator;
-    public Slider videoProgressSlider;
-    private bool dragging = false;
+    public Animator[] pauseIconAnimators;
+    public Slider[] videoSliders;
+    private bool dragging;
+    private int draggingIndex;
+    
+    
     public void SetUrl(string url)
     {
         videoPlayer.url = url;
@@ -37,23 +40,33 @@ public class LightingEditorVideoPlayer : MonoBehaviour
         if (!paused)
         {
             videoPlayer.Play();
-            pauseIconAnimator.SetBool("Paused", false);
+            SetPauseIcon(false);
         }
         else
         {
             videoPlayer.Pause();
-            pauseIconAnimator.SetBool("Paused", true);
+            SetPauseIcon(true);
+        }
+    }
+
+    private void SetPauseIcon(bool paused)
+    {
+        foreach (Animator pauseIconAnimator in pauseIconAnimators)
+        {
+            pauseIconAnimator.SetBool("Paused", paused);
         }
     }
     
-    public void BeginDrag()
+    public void BeginDrag(int index)
     {
         dragging = true;
+        draggingIndex = index;
     }
     
-    public void EndDrag()
+    public void EndDrag(int index)
     {
         dragging = false;
+        draggingIndex = index;
     }
 
     public float GetVideoTime()
@@ -70,14 +83,23 @@ public class LightingEditorVideoPlayer : MonoBehaviour
     {
         if (dragging)
         {
-            videoPlayer.time = videoPlayer.length * videoProgressSlider.value;
+            videoPlayer.time = videoPlayer.length * videoSliders[draggingIndex].value;
         } else
         {
             float v = (float)(videoPlayer.time / videoPlayer.length);
             if (!float.IsNaN(v))
             {
-                videoProgressSlider.value = v;
+                SetSliders(v);
             }
+        }
+    }
+    
+    
+    private void SetSliders(float value)
+    {
+        foreach (Slider slider in videoSliders)
+        {
+            slider.value = value;
         }
     }
 }

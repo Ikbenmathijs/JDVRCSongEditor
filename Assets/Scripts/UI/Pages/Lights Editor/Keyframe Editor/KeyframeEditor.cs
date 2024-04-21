@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class KeyframeEditor : MonoBehaviour
@@ -9,6 +10,13 @@ public class KeyframeEditor : MonoBehaviour
     public InstructionSpecificKeyframeEditor currentEditor;
     public InstructionSpecificKeyframeEditor[] editors;
     public Keyframe keyframe;
+    public TextMeshProUGUI keyframeNameText;
+    public TextMeshProUGUI keyframeTimeText;
+
+
+
+    private InstructionSpecificKeyframeEditor previousEditor;
+    private Keyframe previousKeyframe;
     
     public KeyframeEditor()
     {
@@ -30,18 +38,60 @@ public class KeyframeEditor : MonoBehaviour
     public void SetKeyframe(Keyframe keyframe)
     {
         this.keyframe = keyframe;
-        UpdateEditor();
+        UpdateEditor(forceInitializeEditor: true);
     }
     
     
 
-    public void UpdateEditor()
+    public void UpdateEditor(bool forceInitializeEditor = false)
     {
+        keyframeNameText.text = keyframe.instructionType.ToFriendlyString();
+        keyframeTimeText.text = Util.TimeToString(keyframe.time);
+    
         CloseAllEditors();
-        
+
+        if (keyframe == null)
+        {
+            CloseKeyframeEditor();
+            return;
+        }
         currentEditor = GetEditorByInstructionType(keyframe.instructionType);
         currentEditor.gameObject.SetActive(true);
+
+
+        if (currentEditor != previousEditor || keyframe != previousKeyframe || forceInitializeEditor)
+        {
+            currentEditor.InitializeEditor();
+        }
+        
         currentEditor.UpdateEditor();
+        
+        SelectKeyframePopup.instance.UpdateKeyframesList();
+        
+        
+        previousEditor = currentEditor;
+        previousKeyframe = keyframe;
+    }
+
+    public void DeleteKeyframeButtonPressed()
+    {
+        foreach (Keyframe v in KeyframesManager.instance.keyframes)
+        {
+            if (v == keyframe)
+            {
+                KeyframesManager.instance.keyframes.Remove(v);
+                KeyframesManager.instance.UpdateKeyframeMarkers();
+                
+                keyframe = null;
+                UpdateEditor();
+                
+                SelectKeyframePopup.instance.UpdateKeyframesList();
+
+                v.keyframeMarker.GetComponent<KeyframeMenuObject>().holdingKeyframes.Remove(v);
+                
+                break;
+            }
+        }
     }
     
     
@@ -71,7 +121,4 @@ public class KeyframeEditor : MonoBehaviour
 
         return null;
     }
-    
-    
-    
 }

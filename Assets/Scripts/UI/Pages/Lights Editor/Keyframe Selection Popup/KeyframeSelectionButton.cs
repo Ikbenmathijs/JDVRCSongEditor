@@ -25,10 +25,10 @@ public class KeyframeDetails : MonoBehaviour
         
         ResetKeyframeDetails();
         timeText.text = Util.TimeToString(keyframe.time);
+        instructionTypeText.text = keyframe.instructionType.ToFriendlyString();
         
         if (keyframe.instructionType == InstructionType.SetColors)
         {
-            instructionTypeText.text = "Set Colors";
             if (keyframe.changeBackgroundColor)
             {
                 GameObject instance = Instantiate(colorIndicatorPrefab, colorIndicatorParent);
@@ -37,15 +37,17 @@ public class KeyframeDetails : MonoBehaviour
                 colorIndicator.SetColor(keyframe.backgroundColor);
             }
 
-            foreach (Color color in keyframe.colors)
+
+            if (keyframe.colors != null)
             {
-                GameObject instance = Instantiate(colorIndicatorPrefab, colorIndicatorParent);
-                ColorIndicator colorIndicator = instance.GetComponent<ColorIndicator>();
-                colorIndicator.SetIsBackgroundColor(false);
-                colorIndicator.SetColor(color);
+                foreach (Color color in keyframe.colors)
+                {
+                    GameObject instance = Instantiate(colorIndicatorPrefab, colorIndicatorParent);
+                    ColorIndicator colorIndicator = instance.GetComponent<ColorIndicator>();
+                    colorIndicator.SetIsBackgroundColor(false);
+                    colorIndicator.SetColor(color);
+                }
             }
-            
-            
         }
     }
 

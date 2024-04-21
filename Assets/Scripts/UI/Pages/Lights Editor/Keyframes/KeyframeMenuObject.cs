@@ -11,7 +11,6 @@ public class KeyframeMenuObject : MonoBehaviour
     public List<Keyframe> holdingKeyframes = new List<Keyframe>();
     public Color selectedColor;
     public Color unselectedColor;
-    public SelectKeyframePopup selectKeyframePopup;
     
     public void AddKeyframe(Keyframe keyframe)
     {
@@ -25,13 +24,12 @@ public class KeyframeMenuObject : MonoBehaviour
 
     public void OnKeyframeHeadPressed()
     {
-        if (selectKeyframePopup == null)
+        if (holdingKeyframes.Count == 1)
         {
-            Debug.LogError("SelectKeyframePopup is null");
+            KeyframeEditor.instance.OpenKeyframeEditor(holdingKeyframes[0]);
             return;
         }
-        
-        selectKeyframePopup.OpenKeyframeDetailsListPopup(holdingKeyframes);
+        SelectKeyframePopup.instance.OpenSelectKeyframePopup(this);
     }
 
     

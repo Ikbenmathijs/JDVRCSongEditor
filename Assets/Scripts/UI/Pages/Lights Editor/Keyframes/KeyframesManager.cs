@@ -7,15 +7,20 @@ using UnityEngine.Serialization;
 
 public class KeyframesManager : MonoBehaviour
 {
+    public static KeyframesManager instance;
     public LightingEditorVideoPlayer videoPlayer;
     public GameObject keyframePrefab;
     public GameObject keyframeIndicatorPrefab;
     public Transform keyframesParent;
     public RectTransform keyframeObjectStartPosition;
     public RectTransform keyframeObjectEndPosition;
-    public SelectKeyframePopup selectKeyframePopup;
     
     public List<Keyframe> keyframes = new List<Keyframe>();
+    
+    public KeyframesManager()
+    {
+        instance = this;
+    }
     
     
 
@@ -23,8 +28,11 @@ public class KeyframesManager : MonoBehaviour
     public void AddKeyFrameButtonPressed()
     {
         float time = videoPlayer.GetVideoTime();
-        keyframes.Add(new Keyframe(InstructionType.None, time));
+        Keyframe keyframe = new Keyframe(InstructionType.None, time);
+        keyframes.Add(keyframe);
         UpdateKeyframeMarkers();
+        KeyframeEditor.instance.OpenKeyframeEditor(keyframe);
+        SelectKeyframePopup.instance.UpdateKeyframesList();
     }
 
     public void UpdateKeyframeMarkers()
@@ -68,7 +76,6 @@ public class KeyframesManager : MonoBehaviour
                 rectTransform.position = new Vector3(posX, keyframeObjectStartPosition.position.y, 0f);
                 keyframes[i].keyframeMarker = keyframeInstance;
                 KeyframeMenuObject keyframeMenuObject = keyframeInstance.GetComponent<KeyframeMenuObject>();
-                keyframeMenuObject.selectKeyframePopup = selectKeyframePopup;
                 keyframeMenuObject.AddKeyframe(keyframes[i]);
             }
             else
@@ -82,73 +89,8 @@ public class KeyframesManager : MonoBehaviour
                 keyframes[i].keyframeIndicator = indicatorInstance;
             }
             
-            KeyframeEditor.instance.OpenKeyframeEditor();
         }
     }
 }
 
 
-public class Keyframe : IComparable<Keyframe>
-{
-    public InstructionType instructionType;
-    public float time;
-    public GameObject keyframeMarker;
-    
-    public Color backgroundColor; // set if instructionType is SetColors or LerpDefault or combination
-    public List<Color> colors;
-    public float lerpTime = 1f; // set if instructionType is LerpDefault or combination
-    public bool changeBackgroundColor = false;
-
-    [CanBeNull] public GameObject keyframeIndicator; // is null if the indicator is tied to a keyframe marker exactly (because it's the first keyframe in a group)
-
-    public int CompareTo(Keyframe other)
-    {
-        if (other == null)
-            return 1;
-        
-        return time.CompareTo(other.time);
-    }
-
-    public Keyframe(InstructionType instructionType, float time)
-    {
-        this.instructionType = instructionType;
-        this.time = time;
-    }
-}
-
-
-public enum InstructionType
-{
-    None,
-    SetColors, // this translates to a combi of lerpdefault and setcolors in the 'language' to prevent confusion
-}
-
-public static class InstructionTypeExtensions
-{
-    public static string ToFriendlyString(this InstructionType instructionType)
-    {
-        switch (instructionType)
-        {
-            case InstructionType.None:
-                return "Empty instruction";
-            case InstructionType.SetColors:
-                return "Set Colors";
-            default:
-                return "Unknown instruction";
-        }
-    }
-    
-    public static string GetDescription(this InstructionType instructionType)
-    {
-        switch (instructionType)
-        {
-            case InstructionType.None:
-                return "This instruction does nothing, please change the instruction type";
-            case InstructionType.SetColors:
-                return "Sets the background and light colors of the map. You can choose any number of colors, and you can choose to smoothly transition the background color";
-            default:
-                return "Unknown instruction";
-        
-        }   
-    }
-}
