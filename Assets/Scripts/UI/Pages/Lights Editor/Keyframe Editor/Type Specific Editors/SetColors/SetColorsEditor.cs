@@ -38,11 +38,11 @@ public class SetColorsEditor : InstructionSpecificKeyframeEditor
     public override void InitializeEditor()
     {
         selectingColor = false;
-        changeBackgroundColorEditor.SetActive(KeyframeEditor.instance.keyframe.changeBackgroundColor);
-        changeBackgroundColorEditorToggle.isOn = KeyframeEditor.instance.keyframe.changeBackgroundColor;
-        fadeBackgroundColorEditor.SetActive(KeyframeEditor.instance.keyframe.fadeBackgroundColor);
-        fadeBackgroundColorToggle.isOn = KeyframeEditor.instance.keyframe.fadeBackgroundColor;
-        FadeBackgroundColorEditor.instance.SetFadeSpeed(KeyframeEditor.instance.keyframe.backgroundColorLerpSpeed);
+        changeBackgroundColorEditor.SetActive(KeyframeEditor.instance.keyframe.instruction.changeBackgroundColor);
+        changeBackgroundColorEditorToggle.isOn = KeyframeEditor.instance.keyframe.instruction.changeBackgroundColor;
+        fadeBackgroundColorEditor.SetActive(KeyframeEditor.instance.keyframe.instruction.fadeBackgroundColor);
+        fadeBackgroundColorToggle.isOn = KeyframeEditor.instance.keyframe.instruction.fadeBackgroundColor;
+        FadeBackgroundColorEditor.instance.SetFadeSpeed(KeyframeEditor.instance.keyframe.instruction.backgroundColorFadeSpeed);
     }
 
     public override void UpdateEditor()
@@ -55,7 +55,7 @@ public class SetColorsEditor : InstructionSpecificKeyframeEditor
             }
         }
         Keyframe keyframe = KeyframeEditor.instance.keyframe;
-        List<Color> primaryColors = keyframe.colors;
+        List<Color> primaryColors = keyframe.instruction.colors;
 
         for (int i = 0; i < primaryColors.Count; i++)
         {
@@ -67,7 +67,7 @@ public class SetColorsEditor : InstructionSpecificKeyframeEditor
             plusButton.SetAsLastSibling();
         }
 
-        backgroundColorButton.SetColor(keyframe.backgroundColor);
+        backgroundColorButton.SetColor(keyframe.instruction.backgroundColor);
         
         noPrimaryColorsText.SetActive(primaryColors.Count == 0);
 
@@ -77,8 +77,8 @@ public class SetColorsEditor : InstructionSpecificKeyframeEditor
     
     public void OnAddColorButtonPressed()
     {
-        KeyframeEditor.instance.keyframe.colors.Add(Color.white);
-        UpdateEditor();
+        KeyframeEditor.instance.keyframe.instruction.colors.Add(Color.white);
+        KeyframeEditor.instance.OnKeyframeChanged();
     }
 
     public void ChangeColor(bool isBackgroundColor, int index = 0)
@@ -87,7 +87,7 @@ public class SetColorsEditor : InstructionSpecificKeyframeEditor
         changingBackgroundColor = isBackgroundColor;
         selectingColor = true;
         Keyframe keyframe = KeyframeEditor.instance.keyframe;
-        colorPicker.CurrentColor = isBackgroundColor ? keyframe.backgroundColor : keyframe.colors[index];
+        colorPicker.CurrentColor = isBackgroundColor ? keyframe.instruction.backgroundColor : keyframe.instruction.colors[index];
         
         KeyframeEditor.instance.UpdateEditor();
     }
@@ -98,35 +98,34 @@ public class SetColorsEditor : InstructionSpecificKeyframeEditor
         Keyframe keyframe = KeyframeEditor.instance.keyframe;
         if (changingBackgroundColor)
         {
-            keyframe.backgroundColor = colorPicker.CurrentColor;
+            keyframe.instruction.backgroundColor = colorPicker.CurrentColor;
         }
         else
         {
-            keyframe.colors[changingColorIndex] = colorPicker.CurrentColor;
+            keyframe.instruction.colors[changingColorIndex] = colorPicker.CurrentColor;
         }
-        
-        KeyframeEditor.instance.UpdateEditor();
+        KeyframeEditor.instance.OnKeyframeChanged();
     }
 
     
     public void OnChangeBackgroundColorEditorToggled()
     {
         changeBackgroundColorEditor.SetActive(changeBackgroundColorEditorToggle.isOn);
-        KeyframeEditor.instance.keyframe.changeBackgroundColor = changeBackgroundColorEditorToggle.isOn;
+        KeyframeEditor.instance.keyframe.instruction.changeBackgroundColor = changeBackgroundColorEditorToggle.isOn;
     }
 
     
     public void OnFadeBackgroundColorEditorToggled()
     {
         fadeBackgroundColorEditor.SetActive(fadeBackgroundColorToggle.isOn);
-        KeyframeEditor.instance.keyframe.fadeBackgroundColor = fadeBackgroundColorToggle.isOn;
+        KeyframeEditor.instance.keyframe.instruction.fadeBackgroundColor = fadeBackgroundColorToggle.isOn;
     }
 
 
     public void SetBackgroundColorFadeSpeed(float fadeSpeed)
     {
-        KeyframeEditor.instance.keyframe.backgroundColorLerpSpeed = fadeSpeed;
-        KeyframeEditor.instance.UpdateEditor();
+        KeyframeEditor.instance.keyframe.instruction.backgroundColorFadeSpeed = fadeSpeed;
+        KeyframeEditor.instance.OnKeyframeChanged();
     }
 
 

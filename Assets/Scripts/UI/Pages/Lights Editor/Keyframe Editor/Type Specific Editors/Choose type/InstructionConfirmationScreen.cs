@@ -2,26 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class InstructionConfirmationScreen : MonoBehaviour
 {
-    public TextMeshProUGUI instructionTypeText;
+    public TextMeshProUGUI instructionName;
     public TextMeshProUGUI instructionTypeDescription;
+    public Image instructionNameBackgroundColor;
+    public Color defaultInstructionNameBackgroundColor;
     public InstructionType instructionType;
+    private Instruction savedInstructionToSelect;
+    private bool selectingSavedInstruction;
 
-    public void InitializeInstructionConfirmationScreen(InstructionType instructionType)
+    public void InitializeInstructionConfirmationScreenWithInstructionType(InstructionType instructionType)
     {
         this.instructionType = instructionType;
         instructionTypeDescription.text = instructionType.GetDescription();
-        instructionTypeText.text = instructionType.ToFriendlyString();
-        
+        instructionName.text = instructionType.ToFriendlyString();
+        instructionNameBackgroundColor.color = defaultInstructionNameBackgroundColor;
+        selectingSavedInstruction = false;
+    }
+    
+    public void InitializeInstructionConfirmationScreenWithSavedInstruction(Instruction instruction)
+    {
+        instructionType = instruction.instructionType;
+        instructionTypeDescription.text = "Saved keyframe\nKeyframe type: " + instruction.instructionType.ToFriendlyString() + "\n Keyframe type description: " + instruction.instructionType.GetDescription();
+        instructionName.text = instruction.savedInstructionName;
+        instructionNameBackgroundColor.color = instruction.savedInstructionColor;
+        selectingSavedInstruction = true;
+        savedInstructionToSelect = instruction;
     }
     
     public void OnConfirmButtonClicked()
     {
-        KeyframeEditor.instance.keyframe.instructionType = instructionType;
-        KeyframeEditor.instance.UpdateEditor();
-        InstructionSelectionEditor.instance.instructionConfirmationScreenActive = false;
+        if (!selectingSavedInstruction)
+        {
+            KeyframeEditor.instance.keyframe.instruction = new Instruction(instructionType);
+        }
+        else
+        {
+            KeyframeEditor.instance.keyframe.instruction = savedInstructionToSelect;
+        }
+        InstructionSelectionEditor.instance.instructionConfirmationScreenActive = false; 
+        KeyframeEditor.instance.OnKeyframeChanged();
     }
 
     public void OnGoBackButtonClicked()

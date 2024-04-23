@@ -56,7 +56,11 @@ MonoBehaviour:
   amountOfKeyframesText: {fileID: 420494657380707941}
   selectedColor: {r: 0.96862745, g: 0.75686276, b: 0.4509804, a: 1}
   unselectedColor: {r: 0.38431373, g: 0.13725491, b: 0.81960785, a: 1}
-  selectKeyframePopup: {fileID: 0}
+  whiteKeyframeHeadSprite: {fileID: 21300000, guid: a41ea5334939a5c499bab29abd6aa9ef, type: 3}
+  normalKeyframeHeadSprite: {fileID: 21300000, guid: 04e60a7fabe4c894d9c0c08cbeeb3a37, type: 3}
+  hoverKeyframeSprite: {fileID: 21300000, guid: 85d457f9cfbadee4db520d71112adc38, type: 3}
+  keyframeHead: {fileID: 9216864513282515401}
+  mainKeyframeIndicator: {fileID: 3548475706123485203}
 --- !u!114 &504536181278305819
 MonoBehaviour:
   m_ObjectHideFlags: 0

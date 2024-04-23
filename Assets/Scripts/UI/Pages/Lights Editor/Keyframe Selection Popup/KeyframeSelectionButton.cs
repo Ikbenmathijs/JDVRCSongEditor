@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class KeyframeDetails : MonoBehaviour
 {
@@ -10,7 +10,9 @@ public class KeyframeDetails : MonoBehaviour
     public TextMeshProUGUI instructionTypeText;
     public GameObject colorIndicatorPrefab;
     public Transform colorIndicatorParent;
+    public Image timeIndicatorBackground;
     public Keyframe keyframe;
+    
 
 
 
@@ -25,22 +27,34 @@ public class KeyframeDetails : MonoBehaviour
         
         ResetKeyframeDetails();
         timeText.text = Util.TimeToString(keyframe.time);
-        instructionTypeText.text = keyframe.instructionType.ToFriendlyString();
-        
-        if (keyframe.instructionType == InstructionType.SetColors)
+
+
+        if (keyframe.instruction.savedInstruction)
         {
-            if (keyframe.changeBackgroundColor)
+            instructionTypeText.text = keyframe.instruction.savedInstructionName;
+            timeIndicatorBackground.color = keyframe.instruction.savedInstructionColor;
+        }
+        else
+        {
+            instructionTypeText.text = keyframe.instruction.instructionType.ToFriendlyString();
+        }
+        
+        
+        
+        if (keyframe.instruction.instructionType == InstructionType.SetColors)
+        {
+            if (keyframe.instruction.changeBackgroundColor)
             {
                 GameObject instance = Instantiate(colorIndicatorPrefab, colorIndicatorParent);
                 ColorIndicator colorIndicator = instance.GetComponent<ColorIndicator>();
                 colorIndicator.SetIsBackgroundColor(true);
-                colorIndicator.SetColor(keyframe.backgroundColor);
+                colorIndicator.SetColor(keyframe.instruction.backgroundColor);
             }
 
 
-            if (keyframe.colors != null)
+            if (keyframe.instruction.colors != null)
             {
-                foreach (Color color in keyframe.colors)
+                foreach (Color color in keyframe.instruction.colors)
                 {
                     GameObject instance = Instantiate(colorIndicatorPrefab, colorIndicatorParent);
                     ColorIndicator colorIndicator = instance.GetComponent<ColorIndicator>();

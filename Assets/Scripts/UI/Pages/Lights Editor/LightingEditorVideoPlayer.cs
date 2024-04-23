@@ -7,12 +7,14 @@ using UnityEngine.Video;
 
 public class LightingEditorVideoPlayer : MonoBehaviour
 {
+
     public VideoPlayer videoPlayer;
     private bool paused = true;
     public Animator[] pauseIconAnimators;
     public Slider[] videoSliders;
     private bool dragging;
     private int draggingIndex;
+    private double draggedTime;
     
     
     public void SetUrl(string url)
@@ -47,6 +49,7 @@ public class LightingEditorVideoPlayer : MonoBehaviour
             videoPlayer.Pause();
             SetPauseIcon(true);
         }
+        LightsPreviewInterpreter.instance.RefreshExecutedKeyframes();
     }
 
     private void SetPauseIcon(bool paused)
@@ -67,11 +70,17 @@ public class LightingEditorVideoPlayer : MonoBehaviour
     {
         dragging = false;
         draggingIndex = index;
+        LightsPreviewInterpreter.instance.RefreshExecutedKeyframes(true, (float)draggedTime);
     }
-
+    
     public float GetVideoTime()
     {
         return (float)videoPlayer.time;
+    }
+
+    public bool IsPlaying()
+    {
+        return !paused;
     }
     
     public float GetVideoLength()
@@ -83,7 +92,8 @@ public class LightingEditorVideoPlayer : MonoBehaviour
     {
         if (dragging)
         {
-            videoPlayer.time = videoPlayer.length * videoSliders[draggingIndex].value;
+            draggedTime = videoPlayer.length * videoSliders[draggingIndex].value;
+            videoPlayer.time = draggedTime;
         } else
         {
             float v = (float)(videoPlayer.time / videoPlayer.length);

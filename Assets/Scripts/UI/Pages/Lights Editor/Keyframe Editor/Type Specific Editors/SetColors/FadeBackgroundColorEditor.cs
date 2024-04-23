@@ -30,7 +30,7 @@ public class FadeBackgroundColorEditor : MonoBehaviour
         
         fadeSpeedInputField.text = fadeSpeed.ToString("0.00") + "x";
         
-        KeyframeEditor.instance.keyframe.backgroundColorLerpSpeed = fadeSpeed;
+        KeyframeEditor.instance.keyframe.instruction.backgroundColorFadeSpeed = fadeSpeed;
     }
 
     public void OnFadeSliderChanged()
@@ -64,7 +64,7 @@ public class FadeBackgroundColorEditor : MonoBehaviour
         }
         else
         {
-            fadeSpeedInputField.text = KeyframeEditor.instance.keyframe.backgroundColorLerpSpeed.ToString("0.00") + "x";
+            fadeSpeedInputField.text = KeyframeEditor.instance.keyframe.instruction.backgroundColorFadeSpeed.ToString("0.00") + "x";
         }
     }
 }

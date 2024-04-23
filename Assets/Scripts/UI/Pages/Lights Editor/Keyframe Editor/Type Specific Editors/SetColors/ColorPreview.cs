@@ -14,4 +14,9 @@ public class ColorPreview : MonoBehaviour
     {
         previewImage.color = colorPicker.CurrentColor;
     }
+
+    public void SetColor(Color color)
+    {
+        previewImage.color = color;
+    }
 }

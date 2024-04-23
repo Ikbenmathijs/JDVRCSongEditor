@@ -16,14 +16,14 @@ public class ColorButton : MonoBehaviour
 
     public void RemoveColorButtonPressed()
     {
-        KeyframeEditor.instance.keyframe.colors.RemoveAt(index);
-        KeyframeEditor.instance.UpdateEditor();
+        KeyframeEditor.instance.keyframe.instruction.colors.RemoveAt(index);
+        KeyframeEditor.instance.OnKeyframeChanged();
     }
 
 
     public void OnColorButtonPressed()
     {
-        if (index < 0 || index >= KeyframeEditor.instance.keyframe.colors.Count) return;
+        if (index < 0 || index >= KeyframeEditor.instance.keyframe.instruction.colors.Count) return;
         SetColorsEditor.instance.ChangeColor(false, index);
     }
 }

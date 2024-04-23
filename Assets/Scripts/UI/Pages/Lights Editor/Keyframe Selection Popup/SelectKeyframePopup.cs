@@ -9,36 +9,37 @@ public class SelectKeyframePopup : MonoBehaviour
     public Animator keyframePopupAnimator;
     public Transform keyframeDetailsParent;
     public GameObject keyframeDetailsPrefab;
-    public Toggle showAllKeyframesToggle;
     public KeyframesManager keyframesManager;
-    
     private KeyframeMenuObject clickedKeyframeMenuObject;
 
+    private bool showAllKeyframes;
     
     public SelectKeyframePopup()
     {
         instance = this;
+    }
+
+
+    public void OpenKeyframesListButtonPressed()
+    {
+        OpenSelectKeyframePopup(null);
     }
     
     public void OpenSelectKeyframePopup(KeyframeMenuObject keyframeMenuObject)
     {
         keyframePopupAnimator.SetBool("Open", true);
 
+        showAllKeyframes = keyframeMenuObject == null;
         clickedKeyframeMenuObject = keyframeMenuObject;
-
-        List<Keyframe> keyframeGroup = keyframeMenuObject.holdingKeyframes; 
-        
         
         UpdateKeyframesList();
     }
     
     
-    
-    
     public void UpdateKeyframesList()
     {
         List<Keyframe> currentKeyframeGroup = null;
-        if (!showAllKeyframesToggle.isOn && clickedKeyframeMenuObject != null)
+        if (!showAllKeyframes && clickedKeyframeMenuObject != null)
         {
             currentKeyframeGroup = clickedKeyframeMenuObject.holdingKeyframes;
         }
@@ -66,15 +67,7 @@ public class SelectKeyframePopup : MonoBehaviour
             keyframeDetails.GetComponent<KeyframeDetails>().SetKeyframeDetails(keyframe);
         }
     }
-
-
     
-    
-    
-    public void ShowAllKeyframesToggled()
-    {
-        UpdateKeyframesList();
-    }
     
     public void CloseSelectKeyframePopup()
     {

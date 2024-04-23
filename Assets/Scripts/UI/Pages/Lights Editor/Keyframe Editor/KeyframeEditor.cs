@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KeyframeEditor : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class KeyframeEditor : MonoBehaviour
     public Keyframe keyframe;
     public TextMeshProUGUI keyframeNameText;
     public TextMeshProUGUI keyframeTimeText;
+    public Color defaultTimeIndicatorBackground;
+    public Image timeIndicatorBackground;
 
 
 
@@ -23,9 +26,17 @@ public class KeyframeEditor : MonoBehaviour
         instance = this;
     }
     
+    public void OnKeyframeChanged()
+    {
+        LightsPreviewInterpreter.instance.RefreshExecutedKeyframes();
+        UpdateEditor();
+        KeyframesManager.instance.UpdateKeyframeMarkers();
+    }
+    
     public void OpenKeyframeEditor(Keyframe keyframe)
     {
         keyframeEditorPopupAnimator.SetBool("Open", true);
+        EditorUiOrSaveKeyframeSwitcher.instance.SwitchToEditorUi();
         SetKeyframe(keyframe);
         
     }
@@ -45,17 +56,28 @@ public class KeyframeEditor : MonoBehaviour
 
     public void UpdateEditor(bool forceInitializeEditor = false)
     {
-        keyframeNameText.text = keyframe.instructionType.ToFriendlyString();
-        keyframeTimeText.text = Util.TimeToString(keyframe.time);
-    
-        CloseAllEditors();
-
         if (keyframe == null)
         {
             CloseKeyframeEditor();
             return;
         }
-        currentEditor = GetEditorByInstructionType(keyframe.instructionType);
+
+        if (keyframe.instruction.savedInstruction)
+        {
+            keyframeNameText.text = keyframe.instruction.savedInstructionName;
+            timeIndicatorBackground.color = keyframe.instruction.savedInstructionColor;
+        }
+        else
+        {
+            keyframeNameText.text = keyframe.instruction.instructionType.ToFriendlyString();
+            timeIndicatorBackground.color = defaultTimeIndicatorBackground;
+        }
+        keyframeTimeText.text = Util.TimeToString(keyframe.time);
+    
+        CloseAllEditors();
+
+        
+        currentEditor = GetEditorByInstructionType(keyframe.instruction.instructionType);
         currentEditor.gameObject.SetActive(true);
 
 
@@ -81,13 +103,14 @@ public class KeyframeEditor : MonoBehaviour
             {
                 KeyframesManager.instance.keyframes.Remove(v);
                 KeyframesManager.instance.UpdateKeyframeMarkers();
+                LightsPreviewInterpreter.instance.RefreshExecutedKeyframes();
                 
                 keyframe = null;
                 UpdateEditor();
                 
+                
                 SelectKeyframePopup.instance.UpdateKeyframesList();
 
-                v.keyframeMarker.GetComponent<KeyframeMenuObject>().holdingKeyframes.Remove(v);
                 
                 break;
             }
@@ -97,7 +120,7 @@ public class KeyframeEditor : MonoBehaviour
     
     public void ChangeInstructionTypeButtonPressed()
     {
-        keyframe.instructionType = InstructionType.None;
+        keyframe.instruction = new Instruction(InstructionType.None);
         UpdateEditor();
     }
     

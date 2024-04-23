@@ -1,9 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 
 // Original code from JDVRC, very little modifications made
-// I wrote this a loooong time ago (and with limitations of U# in mind, which I don't really have here) and it's very messy, apologies
+// I wrote this a loooong time ago (and with limitations of U# at the time in mind, which I don't really have here) and it's very messy, apologies
+// some parts are copied from a tutorial, and I basically built on top of that, which is why there's also very inconsistent naming conventions... yaaaaay
+// keep in mind I was like 15 when I wrote this lol
 public class AudioVisualiser : MonoBehaviour
 {
     private Material[] panels = new Material[64];
@@ -46,6 +47,13 @@ public class AudioVisualiser : MonoBehaviour
     public bool filled = false;
     public bool disableInterval = false;
     public bool disableBeat = false;
+    
+    public static AudioVisualiser instance;
+    
+    public AudioVisualiser()
+    {
+        instance = this;
+    }
 
     private void Start()
     {

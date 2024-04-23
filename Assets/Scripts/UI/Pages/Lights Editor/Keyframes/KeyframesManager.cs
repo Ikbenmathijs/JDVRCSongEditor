@@ -15,7 +15,9 @@ public class KeyframesManager : MonoBehaviour
     public RectTransform keyframeObjectStartPosition;
     public RectTransform keyframeObjectEndPosition;
     
-    public List<Keyframe> keyframes = new List<Keyframe>();
+    public List<Keyframe> keyframes = new List<Keyframe>(); // in order of when the keyframe was created
+    public List<Instruction> savedInstructions = new List<Instruction>();
+    public List<Keyframe> sortedKeyframes = new List<Keyframe>(); // in order of the keyframe time
     
     public KeyframesManager()
     {
@@ -23,21 +25,21 @@ public class KeyframesManager : MonoBehaviour
     }
     
     
-
-
     public void AddKeyFrameButtonPressed()
     {
         float time = videoPlayer.GetVideoTime();
-        Keyframe keyframe = new Keyframe(InstructionType.None, time);
+        Keyframe keyframe = new Keyframe(time); 
         keyframes.Add(keyframe);
+        sortedKeyframes = new List<Keyframe>(keyframes);
+        sortedKeyframes.Sort();
         UpdateKeyframeMarkers();
+        LightsPreviewInterpreter.instance.RefreshExecutedKeyframes();
         KeyframeEditor.instance.OpenKeyframeEditor(keyframe);
         SelectKeyframePopup.instance.UpdateKeyframesList();
     }
 
     public void UpdateKeyframeMarkers()
     {
-        Debug.Log("Amount of keyframes: " + keyframes.Count);
         for (int i = 0; i < keyframesParent.childCount; i++)
         {
             Destroy(keyframesParent.GetChild(i).gameObject);
@@ -56,7 +58,6 @@ public class KeyframesManager : MonoBehaviour
                 && keyframes[j].keyframeMarker != null 
                 && keyframes[j].keyframeMarker.GetComponent<KeyframeMenuObject>().holdingKeyframes[0] == keyframes[j]) // is this the keyframe which originally created the marker?
                 {
-                    Debug.Log("Found nearby keyframe");
                     keyframes[i].keyframeMarker = keyframes[j].keyframeMarker;
                     // keyframe menu object handles updating the text
                     keyframes[i].keyframeMarker.GetComponent<KeyframeMenuObject>().AddKeyframe(keyframes[i]);

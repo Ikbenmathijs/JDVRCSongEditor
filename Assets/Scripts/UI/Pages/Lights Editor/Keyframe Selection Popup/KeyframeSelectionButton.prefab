@@ -214,6 +214,7 @@ MonoBehaviour:
   instructionTypeText: {fileID: 2933617808077396517}
   colorIndicatorPrefab: {fileID: 3410779005314471556, guid: 44575c2881220f3469b9b9ca970315b5, type: 3}
   colorIndicatorParent: {fileID: 2857252664390537547}
+  timeIndicatorBackground: {fileID: 5574035768516673512}
 --- !u!1 &6068782628612893022
 GameObject:
   m_ObjectHideFlags: 0

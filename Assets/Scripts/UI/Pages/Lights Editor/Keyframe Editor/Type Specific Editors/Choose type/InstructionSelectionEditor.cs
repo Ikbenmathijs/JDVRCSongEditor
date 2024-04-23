@@ -40,13 +40,26 @@ public class InstructionSelectionEditor : InstructionSpecificKeyframeEditor
                 InstructionTypeButton button = Instantiate(instructionTypeButtonPrefab, instructionTypeButtonParent).GetComponent<InstructionTypeButton>();
                 button.SetInstructionType(type);
             }
+
+            foreach (Instruction instruction in KeyframesManager.instance.savedInstructions)
+            {
+                InstructionTypeButton button = Instantiate(instructionTypeButtonPrefab, instructionTypeButtonParent).GetComponent<InstructionTypeButton>();
+                button.SetSavedInstruction(instruction);
+            }
         }
     }
     
-    public void OnInstructionSelected(InstructionType instructionType)
+    public void OnInstructionTypeSelected(InstructionType instructionType)
     {
         instructionSelectionScreen.SetActive(false);
         instructionConfirmationScreen.gameObject.SetActive(true);
-        instructionConfirmationScreen.InitializeInstructionConfirmationScreen(instructionType);
+        instructionConfirmationScreen.InitializeInstructionConfirmationScreenWithInstructionType(instructionType);
+    }
+    
+    public void OnSavedInstructionSelected(Instruction instruction)
+    {
+        instructionSelectionScreen.SetActive(false);
+        instructionConfirmationScreen.gameObject.SetActive(true);
+        instructionConfirmationScreen.InitializeInstructionConfirmationScreenWithSavedInstruction(instruction);
     }
 }
