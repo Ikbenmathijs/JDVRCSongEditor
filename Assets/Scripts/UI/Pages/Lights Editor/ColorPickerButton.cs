@@ -6,17 +6,11 @@ using Xenia.ColorPicker;
 public class ColorPickerButton : MonoBehaviour
 {
     public ColorPicker colorPicker;
-    private bool _open;
-    
+
+
     public void OnColorPickerButtonClicked()
     {
-        if (_open)
-        {
-            colorPicker.Close();
-        }
-        else
-        {
-            colorPicker.Open();
-        }
+        colorPicker.Open();
+        colorPicker.transform.Find("Parts").localPosition = Vector3.zero;
     }
 }

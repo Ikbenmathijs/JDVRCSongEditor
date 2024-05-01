@@ -480,6 +480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: -1
   colorFill: {fileID: 8163388869839877059}
+  removeColorButton: {fileID: 8441404506727210678}
 --- !u!114 &8527212442937977737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -685,5 +686,10 @@ PrefabInstance:
 --- !u!224 &7004006629002269048 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2439095922720745236, guid: 0953e80d5175f1944bc466ed19caecc4, type: 3}
+  m_PrefabInstance: {fileID: 4677641572189664876}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8441404506727210678 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3877518562439309530, guid: 0953e80d5175f1944bc466ed19caecc4, type: 3}
   m_PrefabInstance: {fileID: 4677641572189664876}
   m_PrefabAsset: {fileID: 0}

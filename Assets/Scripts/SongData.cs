@@ -15,4 +15,5 @@ public static class SongData
     public static string videoPath;
     public static float startTime;
     public static float endTime;
+    public static float audioPreviewStartTime;
 }

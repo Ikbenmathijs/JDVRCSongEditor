@@ -15,6 +15,8 @@ public class KeyframeEditor : MonoBehaviour
     public TextMeshProUGUI keyframeTimeText;
     public Color defaultTimeIndicatorBackground;
     public Image timeIndicatorBackground;
+    public Button changeKeyframeTypeButton;
+    public Button deleteKeyframeButton;
 
 
 
@@ -49,6 +51,8 @@ public class KeyframeEditor : MonoBehaviour
     public void SetKeyframe(Keyframe keyframe)
     {
         this.keyframe = keyframe;
+        changeKeyframeTypeButton.interactable = !keyframe.initialKeyframe;
+        deleteKeyframeButton.interactable = !keyframe.initialKeyframe;
         UpdateEditor(forceInitializeEditor: true);
     }
     

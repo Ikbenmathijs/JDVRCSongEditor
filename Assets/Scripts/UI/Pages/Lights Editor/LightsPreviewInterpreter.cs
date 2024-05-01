@@ -12,6 +12,7 @@ public class LightsPreviewInterpreter : MonoBehaviour
     private float fadeSpeed;
     private float fadingTime;
     private bool isFading;
+    public float currentBrightness = 1f;
     
     public LightsPreviewInterpreter()
     {
@@ -26,6 +27,9 @@ public class LightsPreviewInterpreter : MonoBehaviour
 
     public void RefreshExecutedKeyframes(bool useCustomTime = false, float customTime = 0f)
     {
+
+        Reset();
+        
         int index = -1;
         for (int i = 0; i < KeyframesManager.instance.sortedKeyframes.Count; i++)
         {
@@ -34,6 +38,7 @@ public class LightsPreviewInterpreter : MonoBehaviour
                 index = i;
             }
         }
+        
     
         for (int i = 0; i < index + 1; i++)
         {
@@ -72,6 +77,16 @@ public class LightsPreviewInterpreter : MonoBehaviour
         }
     }
 
+    private void Reset()
+    {
+        currentBrightness = 1f;
+        AudioVisualiser.instance.filled = false;
+        AudioVisualiser.instance.beatSolidColors = false;
+        AudioVisualiser.instance.intervalSolidColors = false;
+        AudioVisualiser.instance.disableBeat = false;
+        AudioVisualiser.instance.disableInterval = false;
+    }
+
 
     private void ExecuteInstruction(Instruction instruction)
     {
@@ -79,7 +94,12 @@ public class LightsPreviewInterpreter : MonoBehaviour
         {
             if (instruction.colors.Count > 0)
             {
-                AudioVisualiser.instance.colorList = instruction.colors.ToArray();
+                Color[] colors = new Color[instruction.colors.Count];
+                for (int i = 0; i < instruction.colors.Count; i++)
+                {
+                    colors[i] = instruction.colors[i] * currentBrightness;
+                }
+                AudioVisualiser.instance.colorList = colors;
             }
 
             if (instruction.changeBackgroundColor)
@@ -95,9 +115,32 @@ public class LightsPreviewInterpreter : MonoBehaviour
                 else
                 {
                     AudioVisualiser.instance.defaultColor = instruction.backgroundColor;
+                    isFading = false;
                 }
             }
-            
+        } else if (instruction.instructionType == InstructionType.SetBrightness)
+        {
+            float brightness = instruction.brightnessMultiplier;
+            for (int i = 0; i < AudioVisualiser.instance.colorList.Length; i++)
+            {
+                AudioVisualiser.instance.colorList[i] *= brightness;
+            }
+            currentBrightness = brightness;
+        } else if (instruction.instructionType == InstructionType.SetFill)
+        {
+            AudioVisualiser.instance.fillColor = instruction.fillColor;
+            AudioVisualiser.instance.filled = true;
+        } else if (instruction.instructionType == InstructionType.DisableFill)
+        {
+            AudioVisualiser.instance.filled = false;
+        } else if (instruction.instructionType == InstructionType.SolidColors)
+        {
+            AudioVisualiser.instance.beatSolidColors = instruction.solidColorOnBeat;
+            AudioVisualiser.instance.intervalSolidColors = instruction.solidColorsOnInterval;
+        } else if (instruction.instructionType == InstructionType.Disable)
+        {
+            AudioVisualiser.instance.disableBeat = instruction.disableBeat;
+            AudioVisualiser.instance.disableInterval = instruction.disableInterval;
         }
     }
 }

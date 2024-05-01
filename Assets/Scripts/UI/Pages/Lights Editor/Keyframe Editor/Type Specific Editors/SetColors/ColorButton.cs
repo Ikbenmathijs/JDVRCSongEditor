@@ -8,6 +8,8 @@ public class ColorButton : MonoBehaviour
 {
     public int index = -1;
     public Image colorFill;
+    public GameObject removeColorButton;
+    
     public void SetColor(Color color)
     {
         colorFill.color = color;

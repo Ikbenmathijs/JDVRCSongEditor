@@ -15,14 +15,34 @@ public class KeyframesManager : MonoBehaviour
     public RectTransform keyframeObjectStartPosition;
     public RectTransform keyframeObjectEndPosition;
     
-    public List<Keyframe> keyframes = new List<Keyframe>(); // in order of when the keyframe was created
+    public List<Keyframe> keyframes; // in order of when the keyframe was created
     public List<Instruction> savedInstructions = new List<Instruction>();
     public List<Keyframe> sortedKeyframes = new List<Keyframe>(); // in order of the keyframe time
+
+    public List<Color> initialKeyframeDefaultColors = new List<Color>();
+    public Color initialKeyframeBackgroundColor;
+    
     
     public KeyframesManager()
     {
         instance = this;
     }
+
+    private void Start()
+    {
+        Instruction initialInstruction = new Instruction(InstructionType.SetColors);
+        initialInstruction.colors = initialKeyframeDefaultColors;
+        initialInstruction.backgroundColor = initialKeyframeBackgroundColor;
+        initialInstruction.changeBackgroundColor = true;
+        initialInstruction.usedInInitialKeyframe = true;
+        
+        Keyframe initialKeyframe = new Keyframe(0f, initialInstruction);
+        initialKeyframe.initialKeyframe = true;
+        
+        keyframes = new List<Keyframe>() {initialKeyframe};
+        UpdateKeyframeMarkers();
+    }
+    
     
     
     public void AddKeyFrameButtonPressed()
@@ -73,7 +93,7 @@ public class KeyframesManager : MonoBehaviour
                 GameObject keyframeInstance = Instantiate(keyframePrefab, keyframesParent);
                 RectTransform rectTransform = keyframeInstance.GetComponent<RectTransform>();
                 float time = keyframes[i].time;
-                float posX = Mathf.Lerp(keyframeObjectStartPosition.position.x, keyframeObjectEndPosition.position.x, time / (float)videoPlayer.videoPlayer.length);
+                float posX = time < 0.05f ? keyframeObjectStartPosition.position.x : Mathf.Lerp(keyframeObjectStartPosition.position.x, keyframeObjectEndPosition.position.x, time / (float)videoPlayer.videoPlayer.length);
                 rectTransform.position = new Vector3(posX, keyframeObjectStartPosition.position.y, 0f);
                 keyframes[i].keyframeMarker = keyframeInstance;
                 KeyframeMenuObject keyframeMenuObject = keyframeInstance.GetComponent<KeyframeMenuObject>();

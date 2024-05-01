@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class InstructionSelectionEditor : InstructionSpecificKeyframeEditor
 {
@@ -13,6 +13,7 @@ public class InstructionSelectionEditor : InstructionSpecificKeyframeEditor
     public GameObject instructionSelectionScreen;
     public InstructionConfirmationScreen instructionConfirmationScreen;
     public bool instructionConfirmationScreenActive;
+    public Toggle showAdvancedKeyframeTypesToggle;
 
     public InstructionSelectionEditor()
     {
@@ -37,6 +38,7 @@ public class InstructionSelectionEditor : InstructionSpecificKeyframeEditor
             foreach (InstructionType type in types)
             {
                 if (type == InstructionType.None) continue;
+                if (!showAdvancedKeyframeTypesToggle.isOn && type.IsAdvancedInstruction()) continue;
                 InstructionTypeButton button = Instantiate(instructionTypeButtonPrefab, instructionTypeButtonParent).GetComponent<InstructionTypeButton>();
                 button.SetInstructionType(type);
             }
@@ -47,6 +49,11 @@ public class InstructionSelectionEditor : InstructionSpecificKeyframeEditor
                 button.SetSavedInstruction(instruction);
             }
         }
+    }
+
+    public void OnShowAdvancedKeyframeTypesToggleChanged()
+    {
+        KeyframeEditor.instance.UpdateEditor();
     }
     
     public void OnInstructionTypeSelected(InstructionType instructionType)

@@ -64,6 +64,12 @@ public class SetColorsEditor : InstructionSpecificKeyframeEditor
             ColorButton colorButton = instance.GetComponent<ColorButton>();
             colorButton.index = i;
             colorButton.SetColor(color);
+            
+            if (KeyframeEditor.instance.keyframe.instruction.usedInInitialKeyframe && i == 0)
+            {
+                colorButton.removeColorButton.SetActive(false);
+            }
+            
             plusButton.SetAsLastSibling();
         }
 
@@ -73,6 +79,8 @@ public class SetColorsEditor : InstructionSpecificKeyframeEditor
 
         colorSelectorPage.SetActive(selectingColor);
         colorsEditorPage.SetActive(!selectingColor);
+        
+        changeBackgroundColorEditorToggle.interactable = !KeyframeEditor.instance.keyframe.instruction.usedInInitialKeyframe;
     }
     
     public void OnAddColorButtonPressed()

@@ -15,6 +15,7 @@ public class LightingEditorVideoPlayer : MonoBehaviour
     private bool dragging;
     private int draggingIndex;
     private double draggedTime;
+    private bool justDragged = false;
     
     
     public void SetUrl(string url)
@@ -70,12 +71,13 @@ public class LightingEditorVideoPlayer : MonoBehaviour
     {
         dragging = false;
         draggingIndex = index;
+        justDragged = true;
         LightsPreviewInterpreter.instance.RefreshExecutedKeyframes(true, (float)draggedTime);
     }
     
     public float GetVideoTime()
     {
-        return (float)videoPlayer.time;
+        return justDragged ? (float)draggedTime : (float)videoPlayer.time; // this is because when you set the time, the video player has to load for a little bit before actually changing the time
     }
 
     public bool IsPlaying()
@@ -102,6 +104,13 @@ public class LightingEditorVideoPlayer : MonoBehaviour
                 SetSliders(v);
             }
         }
+
+        
+        if (justDragged && Mathf.Abs((float)videoPlayer.time - (float)draggedTime) < 0.3f)
+        {
+            justDragged = false;
+        }
+
     }
     
     
