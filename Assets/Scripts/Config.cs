@@ -10,5 +10,6 @@ public static class Config
     public static string ffmpegName = "ffmpeg.exe";
     public static string videoStoragePath = $"{Application.streamingAssetsPath}/Temp";
     public static string tempFolder = $"{Application.streamingAssetsPath}/Temp";
+    public static string zippableFolder = $"{Application.streamingAssetsPath}/Zippable";
     
 }

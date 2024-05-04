@@ -7,7 +7,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Debug = UnityEngine.Debug;
-using File = UnityEngine.Windows.File;
 
 
 public class Initialize : MonoBehaviour
@@ -26,7 +25,20 @@ public class Initialize : MonoBehaviour
     
     private async void InitializeProgram()
     {
+        if (!Directory.Exists(Config.tempFolder))
+        {
+            Directory.CreateDirectory(Config.tempFolder);
+        }
         
+        if (!Directory.Exists(Config.binariesFolder))
+        {
+            Directory.CreateDirectory(Config.binariesFolder);
+        }
+        
+        if (!Directory.Exists(Config.zippableFolder))
+        {
+            Directory.CreateDirectory(Config.zippableFolder);
+        }
      
         await ClearTempFolder();
         await InitializeYTDLP();

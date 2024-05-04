@@ -30,18 +30,41 @@ public class SelectStartAndEndTimesPage : Page
     }
     private IEnumerator FinishPageInitialization()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.2f);
         videoPlayer.Pause();
 
         SongData.startTime = 0f;
-        SongData.endTime = (float)videoPlayer.length - 1f;
+        SongData.endTime = 0f;
         SetNextPageAvailable(true);
+    }
+    
+    private void Update()
+    {
+        if (dragging)
+        {
+            videoPlayer.time = videoPlayer.length * videoProgressSlider.value;
+        }
+        else
+        {
+            float v = (float)(videoPlayer.time / videoPlayer.length);
+            if (!float.IsNaN(v))
+            {
+                videoProgressSlider.value = v;
+            }
+        }
+
+        if (SongData.endTime == 0f && videoPlayer.length != 0d)
+        {
+            SongData.endTime = (float)videoPlayer.length - 1f;
+            Debug.Log($"End time set to {SongData.endTime}");
+        }
     }
 
     public void PlayPause()
     {
         SetPaused(!paused);
     }
+    
 
 
     public void SetPaused(bool value)
@@ -50,7 +73,7 @@ public class SelectStartAndEndTimesPage : Page
         if (!paused)
         {
             videoPlayer.Play();
-            pauseIconAnimator.SetBool("Paused", false);
+            pauseIconAnimator.SetBool("Paused", false); 
         }
         else
         {
@@ -86,21 +109,7 @@ public class SelectStartAndEndTimesPage : Page
     
 
 
-    private void Update()
-    {
-        if (dragging)
-        {
-            videoPlayer.time = videoPlayer.length * videoProgressSlider.value;
-        }
-        else
-        {
-            float v = (float)(videoPlayer.time / videoPlayer.length);
-            if (!float.IsNaN(v))
-            {
-                videoProgressSlider.value = v;
-            }
-        }
-    }
+    
 
     public override void OnPageUnfocus()
     {

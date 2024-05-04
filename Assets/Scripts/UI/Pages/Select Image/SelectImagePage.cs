@@ -4,6 +4,7 @@ using UnityEngine;
 using SFB;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System.IO;
 
 
 public class SelectImagePage : Page
@@ -53,6 +54,8 @@ public class SelectImagePage : Page
         Sprite imageSprite = Sprite.Create(imageTexture, new Rect(0, 0, imageTexture.width, imageTexture.height), new Vector2(0.5f, 0.5f));
 
         imagePreview.sprite = imageSprite;
+        File.Copy(path, $"{Config.tempFolder}/image.png", true);
+        SongData.imagePath = $"{Config.tempFolder}/image.png";
         
         SetNextPageAvailable(true);
     }

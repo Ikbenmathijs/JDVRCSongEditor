@@ -46,7 +46,13 @@ public class BasicInfoPage : Page
 
     public void OnFieldEntered()
     {
-        SetNextPageAvailable(songNameInputField.text.Length > 0 && artistNameInputField.text.Length > 0 && ValidateDurationInput(durationInputField.text) && difficultySelected && amountOfDancersSelected);
+        if (songNameInputField.text.Length > 0 && artistNameInputField.text.Length > 0 && ValidateDurationInput(durationInputField.text) && difficultySelected && amountOfDancersSelected)
+        {
+            SongData.name = songNameInputField.text;
+            SongData.artist = artistNameInputField.text;
+            SongData.duration = durationInputField.text;
+            SetNextPageAvailable(true);
+        }
     }
 
     private bool ValidateDurationInput(string duration)

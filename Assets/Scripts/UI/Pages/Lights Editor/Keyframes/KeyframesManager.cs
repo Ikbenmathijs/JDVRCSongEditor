@@ -40,6 +40,7 @@ public class KeyframesManager : MonoBehaviour
         initialKeyframe.initialKeyframe = true;
         
         keyframes = new List<Keyframe>() {initialKeyframe};
+        sortedKeyframes = new List<Keyframe>() {initialKeyframe};
         UpdateKeyframeMarkers();
     }
     

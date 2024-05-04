@@ -58,7 +58,7 @@ public class SelectDancerImagesPage : Page
 
         dancerImageSelectors[dancerIndex].dancerImage.sprite = imageSprite;
         
-        SongData.dancerImages[dancerIndex] = imageTexture;
+        SongData.dancerImagePaths[dancerIndex] = path;
         SongData.dancerImageSet[dancerIndex] = true;
         
         SetNextPageAvailable(AllDancerImagesAreSet());

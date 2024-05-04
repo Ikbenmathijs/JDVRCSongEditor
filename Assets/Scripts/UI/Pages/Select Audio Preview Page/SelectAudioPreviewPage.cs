@@ -58,7 +58,7 @@ public class SelectAudioPreviewPage : Page
     
     public void SetAudioPreviewTime()
     {
-        SongData.startTime = (float)videoPlayer.time;
+        SongData.audioPreviewStartTime = (float)videoPlayer.time;
         Rect sliderRect = sliderTransform.rect;
         startMarker.anchoredPosition = new Vector2(sliderRect.x + sliderRect.width * videoProgressSlider.value, startMarker.anchoredPosition.y);
         SetNextPageAvailable(true);
