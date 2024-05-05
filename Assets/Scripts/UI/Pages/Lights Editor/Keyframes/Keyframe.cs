@@ -71,6 +71,9 @@ public class Instruction
     public bool disableBeat = false;
     public bool disableInterval = false;
     
+    // GoldMove
+    public GoldMoveType goldMoveType = GoldMoveType.All;
+    
     
     public Instruction(InstructionType instructionType)
     {
@@ -90,6 +93,15 @@ public class Instruction
 }
 
 
+public enum GoldMoveType
+{
+    All,
+    Dancer0,
+    Dancer1,
+    Dancer2,
+    Dancer3,
+}
+
 public enum InstructionType
 {
     None,
@@ -99,6 +111,7 @@ public enum InstructionType
     DisableFill,
     SolidColors,
     Disable,
+    GoldMove,
 }
 
 public static class InstructionTypeExtensions
@@ -119,6 +132,8 @@ public static class InstructionTypeExtensions
                 return true;
             case InstructionType.Disable:
                 return true;
+            case InstructionType.GoldMove:
+                return false;
             default:
                 return true;
         }
@@ -142,6 +157,8 @@ public static class InstructionTypeExtensions
                 return "Solid Colors";
             case InstructionType.Disable:
                 return "Disable Lights";
+            case InstructionType.GoldMove:
+                return "Gold Move";
             default:
                 return instructionType.ToString();
         }
@@ -165,6 +182,8 @@ public static class InstructionTypeExtensions
                 return "When turned on, colors triggered by music will always go to the maximum brightness regardless of the volume of the music. So a very soft beat can produce the same color intensity as a very loud beat.";
             case InstructionType.Disable:
                 return "Allows you to disable parts of the lights, or all of them so it only shows the background color.";
+            case InstructionType.GoldMove:
+                return "Triggers a gold move in-game. Use this at the start of a gold move";
             default:
                 return "Unknown instruction";
         }   

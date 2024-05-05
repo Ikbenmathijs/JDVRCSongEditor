@@ -24,6 +24,7 @@ public class PagesManager : MonoBehaviour
 
     private void Start()
     {
+    
         UpdatePage();
         menuPages[currentPage].InitializePage();
         menuPages[currentPage].GetComponent<Animator>().SetBool("PageIn", true);

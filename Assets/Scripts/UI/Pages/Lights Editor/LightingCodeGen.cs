@@ -125,6 +125,26 @@ public static class LightingCodeGen
                 return $"{time};Disable:Beat";
             } 
             return $"{time};Disable:None";
+        } else if (instruction.instructionType == InstructionType.GoldMove)
+        {
+            string code = $"{time};GoldMove:";
+            if (instruction.goldMoveType == GoldMoveType.All)
+            {
+                code += "All";
+            } else if (instruction.goldMoveType == GoldMoveType.Dancer0)
+            {
+                code += "0";
+            } else if (instruction.goldMoveType == GoldMoveType.Dancer1)
+            {
+                code += "1";
+            } else if (instruction.goldMoveType == GoldMoveType.Dancer2)
+            {
+                code += "2";
+            } else if (instruction.goldMoveType == GoldMoveType.Dancer3)
+            {
+                code += "3";
+            }
+            return code;
         }
 
         return "";
