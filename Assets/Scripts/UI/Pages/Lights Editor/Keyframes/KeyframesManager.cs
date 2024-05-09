@@ -51,8 +51,6 @@ public class KeyframesManager : MonoBehaviour
         float time = videoPlayer.GetVideoTime();
         Keyframe keyframe = new Keyframe(time); 
         keyframes.Add(keyframe);
-        sortedKeyframes = new List<Keyframe>(keyframes);
-        sortedKeyframes.Sort();
         UpdateKeyframeMarkers();
         LightsPreviewInterpreter.instance.RefreshExecutedKeyframes();
         KeyframeEditor.instance.OpenKeyframeEditor(keyframe);
@@ -61,6 +59,8 @@ public class KeyframesManager : MonoBehaviour
 
     public void UpdateKeyframeMarkers()
     {
+        sortedKeyframes = new List<Keyframe>(keyframes);
+        sortedKeyframes.Sort();
         for (int i = 0; i < keyframesParent.childCount; i++)
         {
             Destroy(keyframesParent.GetChild(i).gameObject);
