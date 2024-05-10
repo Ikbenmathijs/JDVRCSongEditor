@@ -458,7 +458,7 @@ public class SelectVideoPage : Page
         string[] split= timestamp.Split(':');
         int hours = int.Parse(split[0]);
         int minutes = int.Parse(split[1]);
-        int seconds = Mathf.RoundToInt(float.Parse(split[2]));
+        int seconds = Mathf.RoundToInt(float.Parse(split[2], CultureInfo.InvariantCulture));
         
         return hours * 3600 + minutes * 60 + seconds;
     }

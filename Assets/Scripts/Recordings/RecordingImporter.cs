@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using SFB;
 using System.IO;
@@ -54,6 +55,7 @@ public static class RecordingImporter
 
         try
         {
+            Debug.Log("Verifying recording...");
             VerifyRecording(recordingLine);
         }
         catch (Exception e)
@@ -74,15 +76,16 @@ public static class RecordingImporter
         string[] splitRecording = recording.Split('~');
         // get header info
         string[] header = splitRecording[0].Split('|');
-
-
+        
+        
         var recordingVersion = int.Parse(header[0]);
         if (recordingVersion != 2)
         {
             throw new Exception($"Recording version {recordingVersion} not supported");
         }
+        
         int playbackRecordingType = int.Parse(header[1]);
-        float playbackCalibration = float.Parse(header[2]);
+        float playbackCalibration = float.Parse(header[2], CultureInfo.InvariantCulture);
         Vector3[] recordingReference = new Vector3[5];
         
         string[] splitReference = header[3].Split('_');
@@ -92,17 +95,17 @@ public static class RecordingImporter
             recordingReference[i] = getVector3FromString(splitReference[i]);
         }
         
+        
         var splitFrames = splitRecording[1].Split(':');
         var splitPositions = new string[splitFrames.Length];
         var timings = new float[splitFrames.Length];
         var points = new Vector3[splitPositions.Length][];
-
-
+        
         for (int i = 0; i < splitFrames.Length; i++)
         {
             string[] splitFrame = splitFrames[i].Split(';');
             splitPositions[i] = splitFrame[0];
-            timings[i] = float.Parse(splitFrame[1]);
+            timings[i] = float.Parse(splitFrame[1], CultureInfo.InvariantCulture);
             
             string[] pointsInFrame = splitPositions[i].Split('/');
             Vector3[] frameArray = new Vector3[5];
@@ -122,7 +125,7 @@ public static class RecordingImporter
     private static Vector3 getVector3FromString(string input)
     {
         string[] split = input.Split(',');
-        return new Vector3(float.Parse(split[0]), float.Parse(split[1]), float.Parse(split[2]));
+        return new Vector3(float.Parse(split[0], CultureInfo.InvariantCulture), float.Parse(split[1], CultureInfo.InvariantCulture), float.Parse(split[2], CultureInfo.InvariantCulture));
     }
 }
 

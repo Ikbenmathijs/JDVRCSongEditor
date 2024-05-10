@@ -28,7 +28,7 @@ public class RecordingPage : Page
         {
             SetNextPageAvailable(AllRecordingsAreImported());
             popup.ShowPopup("Failed to import recording: " + e.Message);
-            return null;
+            throw;
         }
         
         SetNextPageAvailable(AllRecordingsAreImported());
