@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using SFB;
 using UnityEngine;
@@ -48,6 +49,8 @@ public class ExportPage : Page
             if (savePath == "")
             {
                 popup.ShowPopup("Please select a save location");
+                LoadingText.SetActive(false);
+                ExportButton.SetActive(true);
                 return;
             }
 
@@ -62,6 +65,8 @@ public class ExportPage : Page
 
             ExportData exportData = new ExportData
             {
+                version = 2,
+                videoUrl = SongData.videoUrl,
                 name = SongData.name,
                 artist = SongData.artist,
                 duration = SongData.duration,
@@ -81,7 +86,7 @@ public class ExportPage : Page
 
             File.WriteAllText($"{Config.zippableFolder}/data.json", jsonString);
             
-            File.Copy(SongData.videoPath, $"{Config.zippableFolder}/video.mp4");
+            //File.Copy(SongData.videoPath, $"{Config.zippableFolder}/video.mp4");
             File.Copy(SongData.imagePath, $"{Config.zippableFolder}/image.png");
             for (int i = 0; i < SongData.dancerAmount; i++)
             {
@@ -98,6 +103,8 @@ public class ExportPage : Page
         catch (System.Exception e)
         {
             popup.ShowPopup("An error occurred: " + e.Message);
+            LoadingText.SetActive(false);
+            ExportButton.SetActive(true);
         }
     }
 
@@ -112,6 +119,8 @@ public class ExportPage : Page
 
 public class ExportData
 {
+    public int? version;
+    [CanBeNull] public string videoUrl;
     public string name;
     public string artist;
     public string duration;

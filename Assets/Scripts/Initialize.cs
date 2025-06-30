@@ -30,6 +30,11 @@ public class Initialize : MonoBehaviour
             Directory.CreateDirectory(Config.tempFolder);
         }
         
+        if (!Directory.Exists(Config.videoStoragePath))
+        {
+            Directory.CreateDirectory(Config.videoStoragePath);
+        }
+        
         if (!Directory.Exists(Config.binariesFolder))
         {
             Directory.CreateDirectory(Config.binariesFolder);
@@ -42,6 +47,11 @@ public class Initialize : MonoBehaviour
      
         await ClearTempFolder();
         await InitializeYTDLP();
+        
+        if (!Directory.Exists(Config.videoStoragePath))
+        {
+            Directory.CreateDirectory(Config.videoStoragePath);
+        }
     }
 
     private async Task ClearTempFolder()
@@ -50,6 +60,15 @@ public class Initialize : MonoBehaviour
         
         DirectoryInfo directoryInfo = new DirectoryInfo(Config.tempFolder);
         foreach (FileInfo file in directoryInfo.GetFiles())
+        {
+            consoleOutput.text += $"Deleting {file.FullName}";
+            await Task.Run(() => file.Delete());
+        }
+        
+        currentTaskText.text = "Clearing temp video folder...";
+        
+        DirectoryInfo directoryInfoVideo = new DirectoryInfo(Config.videoStoragePath);
+        foreach (FileInfo file in directoryInfoVideo.GetFiles())
         {
             consoleOutput.text += $"Deleting {file.FullName}";
             await Task.Run(() => file.Delete());
@@ -82,7 +101,7 @@ public class Initialize : MonoBehaviour
         
         Config.initialized = true;
         
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene("MainMenu");
 
     }
     

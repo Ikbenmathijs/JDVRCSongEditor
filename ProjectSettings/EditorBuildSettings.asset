@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/ConvertOldFormatToNew.unity
+    guid: a7f7daca0e0742747ac94476e94fc87b
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: f15933c4a02bfae48b2c30637a10a133
   m_configObjects: {}

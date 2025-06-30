@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class SongData
 {
+    public static string videoUrl;
     public static string name;
     public static string artist;
     public static string duration;

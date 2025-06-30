@@ -46,6 +46,8 @@ public class SelectVideoPage : Page
     private List<Process> runningProcesses = new List<Process>();
     public GameObject alreadySelected;
     
+    private bool videoFromYoutube = false;
+    
     
     
     // Start is called before the first frame update
@@ -67,6 +69,7 @@ public class SelectVideoPage : Page
 
     private async void DownloadFromYoutubeUrlButton()
     {
+        videoFromYoutube = true;
         string url = youtubeUrlInputField.text;
 
         if (!ValidateURL(url))
@@ -131,6 +134,7 @@ public class SelectVideoPage : Page
 
     private async void SelectVideoFromFileAsync(string initialPath)
     {
+        videoFromYoutube = false;
         loadingScreen.SetActive(true);
         selectVideoScreen.SetActive(false);
         string processedVideoPath = await ProcessVideo(initialPath);
@@ -146,14 +150,19 @@ public class SelectVideoPage : Page
 #if UNITY_EDITOR
         if (skipVideoProcessing) return initialPath;
 #endif
+        
         string adjustedAudioVideoPath = await AdjustAudio(initialPath);
-        string processedVideoPath = adjustedAudioVideoPath;
-        if (new FileInfo(initialPath).Length > 95 * 1024 * 1024 || !initialPath.EndsWith(".mp4"))
+        /*if (new FileInfo(initialPath).Length > 95 * 1024 * 1024 || !initialPath.EndsWith(".mp4"))
         { 
             processedVideoPath = await CompressVideo(adjustedAudioVideoPath);
+        }*/
+
+        if (videoFromYoutube)
+        {
+            await Task.Run(() => { File.Delete(initialPath) ;});
         }
 
-        return processedVideoPath;
+        return adjustedAudioVideoPath;
     }
 
     
@@ -205,8 +214,16 @@ public class SelectVideoPage : Page
     
     private async Task<string> AdjustAudio(string inputPath)
     {
+        Debug.Log("Adjusting audio... with path " + inputPath);
         videoDuration = -1;
         float? volumeOffset = await GetRequiredAudioOffset(inputPath);
+        
+        
+        if (!Directory.Exists(Config.videoStoragePath))
+        {
+            Directory.CreateDirectory(Config.videoStoragePath);
+        }
+        
         
         currentTaskText.text = "Adjusting audio volume...";
 
@@ -216,7 +233,7 @@ public class SelectVideoPage : Page
             return inputPath;
         }
         
-        string outputFile = $"{Config.videoStoragePath}/AdjustedAudio.mp4";
+        string outputFile = $"{Config.videoStoragePath}/Video.mp4";
         
         Process ffmpegProcess = new Process
         {
@@ -351,7 +368,7 @@ public class SelectVideoPage : Page
         return requiredVolumeAdjustment;
     }
     
-    private async Task<string> CompressVideo(string videoPath)
+    /*private async Task<string> CompressVideo(string videoPath)
     {
         currentTaskText.text = "Compressing video...";
         videoDuration = -1;
@@ -409,7 +426,7 @@ public class SelectVideoPage : Page
         }
 
         return outputFile;
-    }
+    }*/
 
     private void OnApplicationQuit()
     {
