@@ -7,7 +7,7 @@ using SFB;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ExportConvertedPage : Page
+public class ReRecordingExportPage : Page
 {
     [Header("Dependencies")]
     [SerializeField] private Popup popup;
@@ -19,7 +19,7 @@ public class ExportConvertedPage : Page
 
     private void Start()
     {
-        PageName = "Export converted data";
+        PageName = "Export Re-Recording";
     }
 
     public override void InitializePage()
@@ -32,14 +32,23 @@ public class ExportConvertedPage : Page
     {
         try
         {
-            FormatConvertionGlobals.exportData.version = 2;
-            FormatConvertionGlobals.exportData.isRerecording = false;
+            ExportData exportData = new ExportData
+            {
+                version = 2,
+                isRerecording = true,
+                originalImageName = ReRecordingsGlobals.rerecodingSong.image,
+                name = ReRecordingsGlobals.rerecodingSong.name,
+                artist = ReRecordingsGlobals.rerecodingSong.artist,
+                videoUrl = ReRecordingsGlobals.rerecodingSong.url,
+                dancerAmount = int.Parse(ReRecordingsGlobals.rerecodingSong.amountOfDancers),
+                recordings = SongData.recordings
+            };
         
             string savePath = StandaloneFileBrowser.SaveFilePanel(
                 "Export Song",
                 "",
-                Util.RemoveCharsFromString(FormatConvertionGlobals.exportData.name + "v2", new char[] { '<', '>', ':', '"', '/', '\\', '|', '?', '*' }),
-                "jdvrcsong");
+                Util.RemoveCharsFromString(exportData.name, new char[] { '<', '>', ':', '"', '/', '\\', '|', '?', '*' }),
+                "jdvrcsongrerecording");
 
             if (savePath == "")
             {
@@ -57,10 +66,10 @@ public class ExportConvertedPage : Page
             }
             
             
-            string jsonString = JsonConvert.SerializeObject(FormatConvertionGlobals.exportData);
-            File.WriteAllText(Config.tempFolder + "/unzipped/data.json", jsonString);
+            string jsonString = JsonConvert.SerializeObject(exportData);
+            File.WriteAllText(Config.zippableFolder + "/data.json", jsonString);
             
-            ZipFile.CreateFromDirectory(Config.tempFolder + "/unzipped", savePath, System.IO.Compression.CompressionLevel.Optimal, false);
+            ZipFile.CreateFromDirectory(Config.zippableFolder, savePath, System.IO.Compression.CompressionLevel.Optimal, false);
             popup.ShowPopup("Exported song to " + savePath);
             loadingText.SetActive(false);
             exportButton.SetActive(true);
@@ -83,6 +92,4 @@ public class ExportConvertedPage : Page
     {
         SceneManager.LoadScene("Init");
     }
-    
-    
 }

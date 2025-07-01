@@ -73,6 +73,16 @@ public class Initialize : MonoBehaviour
             consoleOutput.text += $"Deleting {file.FullName}";
             await Task.Run(() => file.Delete());
         }
+        
+        currentTaskText.text = "Clearing zipping folder...";
+        
+        
+        DirectoryInfo directoryInfoZipFolder = new DirectoryInfo(Config.zippableFolder);
+        foreach (FileInfo file in directoryInfoZipFolder.GetFiles())
+        {
+            consoleOutput.text += $"Deleting {file.FullName}";
+            await Task.Run(() => file.Delete());
+        }
     }
 
     private async Task InitializeYTDLP()

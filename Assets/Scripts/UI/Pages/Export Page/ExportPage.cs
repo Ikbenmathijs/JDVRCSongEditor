@@ -66,6 +66,8 @@ public class ExportPage : Page
             ExportData exportData = new ExportData
             {
                 version = 2,
+                isRerecording = false,
+                originalImageName = null,
                 videoUrl = SongData.videoUrl,
                 name = SongData.name,
                 artist = SongData.artist,
@@ -120,6 +122,8 @@ public class ExportPage : Page
 public class ExportData
 {
     public int? version;
+    public bool isRerecording;
+    [CanBeNull] public string originalImageName;
     [CanBeNull] public string videoUrl;
     public string name;
     public string artist;

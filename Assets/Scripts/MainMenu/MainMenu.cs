@@ -15,6 +15,11 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("ConvertOldFormatToNew");
     }
     
+    public void ReRecordingsButtonPressed()
+    {
+        SceneManager.LoadScene("ReRecordings");
+    }
+    
     public void ExitButtonPressed()
     {
         Application.Quit();

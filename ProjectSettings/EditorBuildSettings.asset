@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: f15933c4a02bfae48b2c30637a10a133
+  - enabled: 1
+    path: Assets/Scenes/ReRecordings.unity
+    guid: 05fdd0af86ac07b4ab761323be2bf138
   m_configObjects: {}
