@@ -50,6 +50,12 @@ public class SelectOriginal : Page
             {
                 file.Delete();
             }
+            
+            DirectoryInfo directoryInfoUnzipped = new DirectoryInfo(Config.tempFolder + "/unzipped");
+            foreach (FileInfo file in directoryInfoUnzipped.GetFiles())
+            {
+                file.Delete();
+            }
         
             string path = files[0];
             ZipFile.ExtractToDirectory(path, Config.tempFolder + "/unzipped", true);
