@@ -102,16 +102,20 @@ public class SelectOriginal : Page
             
             
             int dancerAmount = songData.dancerAmount;
-            for (int i = 0; i < dancerAmount; i++)
+            if (dancerAmount > 1)
             {
-                if (!File.Exists(Config.tempFolder + "/unzipped" + $"/dancer{i}.png"))
+                for (int i = 0; i < dancerAmount; i++)
                 {
-                    filePicked = false;
-                    SetNextPageAvailable(false);
-                    popup.ShowPopup($"This file is not a valid JDVRCSong file (dancer{i}.png not found)");
-                    return;
+                    if (!File.Exists(Config.tempFolder + "/unzipped" + $"/dancer{i}.png"))
+                    {
+                        filePicked = false;
+                        SetNextPageAvailable(false);
+                        popup.ShowPopup($"This file is not a valid JDVRCSong file (dancer{i}.png not found)");
+                        return;
+                    }
                 }
             }
+            
             
             if (!Directory.Exists(Config.videoStoragePath))
             {
